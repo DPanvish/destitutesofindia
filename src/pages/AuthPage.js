@@ -33,7 +33,7 @@ import toast from 'react-hot-toast';
  */
 const AuthPage = () => {
   // ===== HOOKS AND STATE =====
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();  // Authentication methods
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail, isProfileComplete } = useAuth();  // Authentication methods
   const [isSignUp, setIsSignUp] = useState(false);                          // Toggle between sign-in/sign-up
   const [showPassword, setShowPassword] = useState(false);                  // Password visibility toggle
   const [formData, setFormData] = useState({
@@ -67,7 +67,13 @@ const AuthPage = () => {
       setIsLoading(true);  // Show loading state
       await signInWithGoogle();  // Trigger Google OAuth
       toast.success('Successfully signed in with Google!');  // Show success message
-      navigate('/');  // Navigate to home page
+      
+      // Check if profile is complete, if not redirect to profile completion
+      if (!isProfileComplete()) {
+        navigate('/complete-profile');
+      } else {
+        navigate('/');  // Navigate to home page
+      }
     } catch (error) {
       console.error('Google sign in error:', error);
       toast.error('Failed to sign in with Google. Please try again.');  // Show error message
@@ -106,11 +112,18 @@ const AuthPage = () => {
       if (isSignUp) {
         await signUpWithEmail(formData.email, formData.password);
         toast.success('Account created successfully!');
+        // For new registrations, always redirect to profile completion
+        navigate('/complete-profile');
       } else {
         await signInWithEmail(formData.email, formData.password);
         toast.success('Successfully signed in!');
+        // Check if profile is complete for existing users
+        if (!isProfileComplete()) {
+          navigate('/complete-profile');
+        } else {
+          navigate('/');  // Navigate to home page
+        }
       }
-      navigate('/');  // Navigate to home page on success
     } catch (error) {
       console.error('Email auth error:', error);
       

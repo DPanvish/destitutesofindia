@@ -7,7 +7,8 @@ import {
   onAuthStateChanged,
   updateProfile
 } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../firebase/config';
 
 /**
  * Authentication Context
@@ -49,6 +50,7 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   // ===== STATE MANAGEMENT =====
   const [currentUser, setCurrentUser] = useState(null);  // Current authenticated user
+  const [userProfile, setUserProfile] = useState(null);  // User profile data from Firestore
   const [loading, setLoading] = useState(true);         // Loading state during auth check
 
   // ===== AUTHENTICATION METHODS =====
@@ -109,6 +111,34 @@ export function AuthProvider({ children }) {
     return updateProfile(currentUser, profileData);
   }
 
+  /**
+   * Fetches user profile data from Firestore
+   * 
+   * @param {string} uid - User ID
+   * @returns {Promise<Object|null>} User profile data or null if not found
+   */
+  async function fetchUserProfile(uid) {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', uid));
+      if (userDoc.exists()) {
+        return userDoc.data();
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Checks if the current user has a complete profile
+   * 
+   * @returns {boolean} True if profile is complete, false otherwise
+   */
+  function isProfileComplete() {
+    return userProfile && userProfile.isProfileComplete;
+  }
+
   // ===== AUTHENTICATION STATE MANAGEMENT =====
   
   /**
@@ -118,8 +148,17 @@ export function AuthProvider({ children }) {
    */
   useEffect(() => {
     // Subscribe to Firebase auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);  // Update current user state
+      
+      if (user) {
+        // Fetch user profile data from Firestore
+        const profile = await fetchUserProfile(user.uid);
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
+      
       setLoading(false);     // Mark loading as complete
     });
 
@@ -132,11 +171,15 @@ export function AuthProvider({ children }) {
   // Value object passed to context consumers
   const value = {
     currentUser,      // Current authenticated user or null
+    userProfile,      // User profile data from Firestore
+    loading,         // Loading state during auth check
     signInWithGoogle, // Google OAuth sign-in method
     signInWithEmail,  // Email/password sign-in method
     signUpWithEmail,  // Email/password registration method
     logout,          // Sign-out method
-    updateUserProfile // Profile update method
+    updateUserProfile, // Profile update method
+    fetchUserProfile, // Fetch user profile method
+    isProfileComplete // Check if profile is complete
   };
 
   // ===== RENDER =====

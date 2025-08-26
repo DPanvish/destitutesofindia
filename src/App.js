@@ -4,6 +4,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
+import UserProfileCompletion from './components/UserProfileCompletion';
+import ProtectedRoute from './components/ProtectedRoute';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import DonatePage from './pages/DonatePage';
@@ -43,6 +45,16 @@ function App() {
             
             {/* Authentication page - login/signup */}
             <Route path="/auth" element={<AuthPage />} />
+            
+            {/* User profile completion page */}
+            <Route 
+              path="/complete-profile" 
+              element={
+                <ProtectedRoute requireProfile={false}>
+                  <UserProfileCompletion />
+                </ProtectedRoute>
+              } 
+            />
             
             {/* Information pages */}
             <Route path="/about" element={<AboutPage />} />
