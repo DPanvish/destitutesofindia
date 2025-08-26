@@ -33,12 +33,11 @@ import toast from 'react-hot-toast';
  */
 const AuthPage = () => {
   // ===== HOOKS AND STATE =====
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail, updateUserProfile } = useAuth();  // Authentication methods
+  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();  // Authentication methods
   const [isSignUp, setIsSignUp] = useState(false);                          // Toggle between sign-in/sign-up
   const [showPassword, setShowPassword] = useState(false);                  // Password visibility toggle
   const [formData, setFormData] = useState({
     email: '',           // User email input
-    username: '',        // User username input (sign-up only)
     password: '',        // User password input
     confirmPassword: ''  // Password confirmation (sign-up only)
   });
@@ -86,11 +85,7 @@ const AuthPage = () => {
   const handleEmailAuth = async (e) => {
     e.preventDefault();  // Prevent form submission
     
-    // Username validation (sign-up only)
-    if (isSignUp && (!formData.username || formData.username.trim().length < 3)) {
-      toast.error('Username must be at least 3 characters long');
-      return;
-    }
+
     
     // Password confirmation validation (sign-up only)
     if (isSignUp && formData.password !== formData.confirmPassword) {
@@ -110,8 +105,6 @@ const AuthPage = () => {
       // Handle sign-up or sign-in based on current mode
       if (isSignUp) {
         await signUpWithEmail(formData.email, formData.password);
-        // Update user profile with username
-        await updateUserProfile({ displayName: formData.username.trim() });
         toast.success('Account created successfully!');
       } else {
         await signInWithEmail(formData.email, formData.password);
@@ -221,27 +214,7 @@ const AuthPage = () => {
             </div>
           </div>
 
-          {isSignUp && (
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                Username
-              </label>
-              <div className="relative">
-                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  required
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
-                  placeholder="Choose a username"
-                  minLength={3}
-                />
-              </div>
-            </div>
-          )}
+
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
