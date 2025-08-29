@@ -108,17 +108,13 @@ const DonatePage = () => {
         return;
       }
       
-      // Create order
-      const order = await createRazorpayOrder(amount);
-      
-      // Configure Razorpay options
+      // Configure Razorpay options without order_id for testing
       const options = {
-        key: 'rzp_test_51H5jK8K8K8K8K', // Test key - replace with your actual key
-        amount: order.amount,
-        currency: order.currency,
+        key: 'rzp_test_RBCRdbbNcgKd2Q', // Your Razorpay test key
+        amount: amount * 100, // Convert to paise
+        currency: 'INR',
         name: 'Destitutes of India',
         description: 'Donation for Community Support',
-        order_id: order.id,
         handler: function (response) {
           // Payment successful
           console.log('Payment successful:', response);
@@ -128,6 +124,11 @@ const DonatePage = () => {
           
           // TODO: Send payment verification to your backend
           verifyPayment(response);
+        },
+        onError: function (error) {
+          console.error('Razorpay error:', error);
+          toast.error('Payment failed: ' + (error.error.description || 'Unknown error'));
+          setIsProcessing(false);
         },
         prefill: {
           name: 'Donor',
@@ -149,10 +150,19 @@ const DonatePage = () => {
       };
 
       console.log('Razorpay options:', options);
+      console.log('Amount in paise:', amount * 100);
 
       // Initialize Razorpay
       const rzp = new window.Razorpay(options);
-      rzp.open();
+      
+      // Add error handling for rzp.open()
+      try {
+        rzp.open();
+      } catch (openError) {
+        console.error('Error opening Razorpay:', openError);
+        toast.error('Failed to open payment gateway');
+        setIsProcessing(false);
+      }
       
     } catch (error) {
       console.error('Payment error:', error);
@@ -412,6 +422,17 @@ const DonatePage = () => {
                     <div className="border-t pt-2 flex justify-between items-center">
                       <span className="font-semibold text-gray-900">Total:</span>
                       <span className="text-xl font-bold text-primary-600">₹{finalAmount.toLocaleString()}</span>
+                    </div>
+                    
+                    {/* Test Mode Indicator */}
+                    <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                        <span className="text-xs text-yellow-700 font-medium">Test Mode</span>
+                      </div>
+                      <p className="text-xs text-yellow-600 mt-1">
+                        This is a test payment. No real money will be charged.
+                      </p>
                     </div>
                   </div>
 

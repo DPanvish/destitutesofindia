@@ -55,23 +55,81 @@ const ContactPage = () => {
   };
 
   /**
+   * Validates form data before submission
+   * 
+   * @returns {boolean} True if form is valid, false otherwise
+   */
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      toast.error('Please enter your name');
+      return false;
+    }
+    if (!formData.email.trim()) {
+      toast.error('Please enter your email');
+      return false;
+    }
+    if (!formData.email.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return false;
+    }
+    if (!formData.subject.trim()) {
+      toast.error('Please enter a subject');
+      return false;
+    }
+    if (!formData.message.trim()) {
+      toast.error('Please enter your message');
+      return false;
+    }
+    if (formData.message.length < 10) {
+      toast.error('Message must be at least 10 characters long');
+      return false;
+    }
+    return true;
+  };
+
+  /**
    * Handles contact form submission
-   * Simulates form submission and provides user feedback
+   * Sends form data to Web3Forms service
    * 
    * @param {Event} e - Form submit event
    */
   const handleSubmit = async (e) => {
     e.preventDefault();  // Prevent default form submission
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
     setIsSubmitting(true);  // Show loading state
 
     try {
-      // Simulate API call to backend service
-      // In production, this would send data to your backend
-      await new Promise(resolve => setTimeout(resolve, 2000));  // 2-second delay
-      
-      setIsSubmitted(true);  // Mark as successfully submitted
-      toast.success('Message sent successfully! We\'ll get back to you soon.');  // Show success message
-      setFormData({ name: '', email: '', subject: '', message: '' });  // Reset form
+      // Prepare form data for Web3Forms
+      const formDataToSend = new FormData();
+      formDataToSend.append('access_key', '4d4f42a6-12b9-4131-a3f9-5e24b198c5d4');
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('subject', formData.subject);
+      formDataToSend.append('message', formData.message);
+      formDataToSend.append('from_name', formData.name);
+      formDataToSend.append('replyto', formData.email);
+
+      // Send form data to Web3Forms
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSubmitted(true);  // Mark as successfully submitted
+        toast.success('Message sent successfully! We\'ll get back to you soon.');  // Show success message
+        setFormData({ name: '', email: '', subject: '', message: '' });  // Reset form
+        console.log('Form submitted successfully:', result);
+      } else {
+        throw new Error('Form submission failed');
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast.error('Failed to send message. Please try again.');  // Show error message
@@ -262,7 +320,16 @@ const ContactPage = () => {
                       rows={6}
                       className="input-field resize-none"
                       placeholder="Tell us more about your inquiry..."
+                      maxLength={1000}
                     />
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-xs text-gray-500">
+                        Minimum 10 characters required
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formData.message.length}/1000
+                      </span>
+                    </div>
                   </div>
 
                   <button
