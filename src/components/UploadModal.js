@@ -1,6 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { X, Camera, Upload, MapPin, User, EyeOff, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { storage, db } from '../firebase/config';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
 /**
@@ -22,7 +25,8 @@ import toast from 'react-hot-toast';
  * @param {function} onClose - Callback to close the modal
  */
 const UploadModal = ({ isOpen, onClose }) => {
-  // ===== STATE MANAGEMENT =====
+  // ===== HOOKS AND STATE =====
+  const { currentUser, userProfile } = useAuth();  // Authentication context
   
   // File handling states
   const [selectedFile, setSelectedFile] = useState(null);        // Stores the selected image file
@@ -196,16 +200,50 @@ const UploadModal = ({ isOpen, onClose }) => {
 
   /**
    * Handles the final upload process after user confirms responsibility
-   * Simulates the upload and resets the form on completion
+   * Uploads image to Firebase Storage and stores metadata in Firestore
    */
   const confirmUpload = async () => {
     setIsUploading(true);
     setShowWarning(false);
 
     try {
-      // TODO: Replace with actual upload logic to backend/Firebase
-      // Simulate upload process for demonstration
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Generate unique filename for the image
+      const timestamp = Date.now();
+      const filename = `photos/${currentUser.uid}/${timestamp}_${selectedFile.name}`;
+      
+      // Create storage reference
+      const storageRef = ref(storage, filename);
+      
+      // Upload image to Firebase Storage
+      const uploadResult = await uploadBytes(storageRef, selectedFile);
+      
+      // Get download URL for the uploaded image
+      const downloadURL = await getDownloadURL(uploadResult.ref);
+      
+      // Prepare photo data for Firestore
+      const photoData = {
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        username: userProfile?.username || currentUser.displayName || 'Anonymous',
+        imageURL: downloadURL,
+        imagePath: filename,
+        location: {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          // Add geohash for efficient geospatial queries (optional)
+          geohash: `${location.latitude.toFixed(6)},${location.longitude.toFixed(6)}`
+        },
+        description: description.trim() || null,
+        isAnonymous: isAnonymous,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        status: 'active', // Can be used for moderation
+        likes: 0,
+        views: 0
+      };
+      
+      // Store photo metadata in Firestore
+      const docRef = await addDoc(collection(db, 'photos'), photoData);
       
       // Show success message and close modal
       toast.success('Photo uploaded successfully!');
@@ -217,7 +255,11 @@ const UploadModal = ({ isOpen, onClose }) => {
       setLocation(null);
       setDescription('');
       setIsAnonymous(false);
+      
+      console.log('Photo uploaded with ID:', docRef.id);
+      
     } catch (error) {
+      console.error('Error uploading photo:', error);
       toast.error('Failed to upload photo. Please try again.');
     } finally {
       setIsUploading(false);

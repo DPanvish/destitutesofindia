@@ -35,7 +35,9 @@ const ImageCard = ({ post }) => {
    * @returns {string} Formatted time string
    */
   const formatTimestamp = (timestamp) => {
-    const date = timestamp.toDate();  // Convert Firestore timestamp to Date
+    if (!timestamp) return 'Recently';
+    
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);  // Handle both Firestore timestamp and regular Date
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));  // Calculate hours difference
     
@@ -115,7 +117,7 @@ const ImageCard = ({ post }) => {
           </div>
         ) : (
           <img
-            src={post.imageUrl}
+            src={post.imageURL}
             alt="Location"
             className={`w-full aspect-video object-cover transition-all duration-500 ${
               imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
@@ -170,12 +172,12 @@ const ImageCard = ({ post }) => {
           <div className="flex items-center space-x-2">
             <MapPin className="w-4 h-4 text-primary-600" />
             <span className="text-sm font-medium text-gray-700">
-              {post.locationName || 'Unknown Location'}
+              {post.location ? `${post.location.latitude.toFixed(4)}, ${post.location.longitude.toFixed(4)}` : 'Unknown Location'}
             </span>
           </div>
           <div className="flex items-center space-x-2 text-gray-500">
             <Clock className="w-4 h-4" />
-            <span className="text-sm">{formatTimestamp(post.timestamp)}</span>
+            <span className="text-sm">{formatTimestamp(post.createdAt)}</span>
           </div>
         </div>
 
@@ -186,7 +188,7 @@ const ImageCard = ({ post }) => {
           </div>
           <div>
             <p className="text-sm font-medium text-gray-900">
-              {post.isAnonymous ? 'Anonymous User' : (post.userName || 'Unknown User')}
+              {post.isAnonymous ? 'Anonymous User' : (post.username || 'Unknown User')}
             </p>
             <p className="text-xs text-gray-500">
               {post.isAnonymous ? 'Shared anonymously' : 'Shared publicly'}

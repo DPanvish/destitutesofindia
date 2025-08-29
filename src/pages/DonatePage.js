@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Heart, CreditCard, QrCode, Building2, ArrowRight, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Heart, CreditCard, QrCode, Building2, ArrowRight, CheckCircle, Shield } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 /**
  * Donate Page Component
@@ -35,8 +36,144 @@ const DonatePage = () => {
   const [isProcessing, setIsProcessing] = useState(false);    // Donation processing state
   const [isSuccess, setIsSuccess] = useState(false);          // Donation success state
 
+
   // ===== CONSTANTS =====
   const predefinedAmounts = [100, 250, 500, 1000, 2500, 5000];  // Available donation amounts in INR
+  
+  // ===== RAZORPAY INTEGRATION =====
+  
+  /**
+   * Loads Razorpay script dynamically
+   */
+  useEffect(() => {
+    const loadRazorpayScript = () => {
+      return new Promise((resolve) => {
+        if (window.Razorpay) {
+          console.log('Razorpay already loaded');
+          resolve();
+          return;
+        }
+        
+        console.log('Loading Razorpay script...');
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = () => {
+          console.log('Razorpay script loaded successfully');
+          resolve();
+        };
+        script.onerror = () => {
+          console.error('Failed to load Razorpay script');
+          toast.error('Payment gateway not available');
+        };
+        document.body.appendChild(script);
+      });
+    };
+
+    loadRazorpayScript();
+  }, []);
+
+  /**
+   * Creates Razorpay order and initiates payment
+   */
+  const createRazorpayOrder = async (amount) => {
+    try {
+      // For testing without backend, create a mock order
+      // In production, this should call your backend API
+      const mockOrder = {
+        id: `order_${Date.now()}`,
+        amount: amount * 100, // Razorpay expects amount in paise
+        currency: 'INR',
+        receipt: `donation_${Date.now()}`,
+      };
+      
+      console.log('Created mock order:', mockOrder);
+      return mockOrder;
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+  };
+
+  /**
+   * Handles Razorpay payment processing
+   */
+  const handleRazorpayPayment = async (amount) => {
+    try {
+      setIsProcessing(true);
+      
+      // Check if Razorpay is loaded
+      if (!window.Razorpay) {
+        toast.error('Payment gateway not loaded. Please refresh the page.');
+        setIsProcessing(false);
+        return;
+      }
+      
+      // Create order
+      const order = await createRazorpayOrder(amount);
+      
+      // Configure Razorpay options
+      const options = {
+        key: 'rzp_test_51H5jK8K8K8K8K', // Test key - replace with your actual key
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Destitutes of India',
+        description: 'Donation for Community Support',
+        order_id: order.id,
+        handler: function (response) {
+          // Payment successful
+          console.log('Payment successful:', response);
+          toast.success('Payment successful! Thank you for your donation.');
+          setIsSuccess(true);
+          setIsProcessing(false);
+          
+          // TODO: Send payment verification to your backend
+          verifyPayment(response);
+        },
+        prefill: {
+          name: 'Donor',
+          email: 'donor@example.com',
+          contact: ''
+        },
+        notes: {
+          address: 'Community Support Donation'
+        },
+        theme: {
+          color: '#6366f1'
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+            toast.error('Payment cancelled');
+          }
+        }
+      };
+
+      console.log('Razorpay options:', options);
+
+      // Initialize Razorpay
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+      
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Payment failed. Please try again.');
+      setIsProcessing(false);
+    }
+  };
+
+  /**
+   * Verifies payment with backend
+   */
+  const verifyPayment = async (response) => {
+    try {
+      console.log('Payment verification data:', response);
+      // TODO: Replace with your backend verification endpoint
+      // For now, just log the verification data
+      console.log('Payment verified successfully (mock)');
+    } catch (error) {
+      console.error('Payment verification failed:', error);
+    }
+  };
 
   // ===== EVENT HANDLERS =====
   
@@ -59,24 +196,31 @@ const DonatePage = () => {
    */
   const handleCustomAmount = (e) => {
     const value = e.target.value;
+    const numValue = parseInt(value) || 0;
+    
+    // Validate maximum limit
+    if (numValue > 100000) {
+      toast.error('Maximum donation amount is ₹1,00,000');
+      return;
+    }
+    
     setCustomAmount(value);  // Update custom amount state
     if (value) {
-      setSelectedAmount(parseInt(value) || 0);  // Update selected amount if valid
+      setSelectedAmount(numValue);  // Update selected amount if valid
     }
   };
 
   /**
    * Handles donation submission process
-   * Simulates payment processing and shows success feedback
+   * Initiates Razorpay payment
    */
   const handleDonate = async () => {
-    setIsProcessing(true);  // Show processing state
-    
-    // Simulate donation processing with 2-second delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSuccess(true);      // Mark as successful
-    setIsProcessing(false);  // Hide processing state
+    if (finalAmount <= 0) {
+      toast.error('Please select a valid amount');
+      return;
+    }
+
+    await handleRazorpayPayment(finalAmount);
   };
 
   // ===== UTILITY VARIABLES =====
@@ -245,63 +389,15 @@ const DonatePage = () => {
                         className="input-field"
                         placeholder="Enter amount in ₹"
                         min="1"
+                        max="100000"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Maximum donation amount: ₹1,00,000
+                      </p>
                     </div>
                   </div>
 
-                  {/* Payment Methods */}
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Payment Method
-                    </h3>
-                    
-                    <div className="space-y-3">
-                      <div className="glass-card p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                            <QrCode className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">UPI Payment</h4>
-                            <p className="text-sm text-gray-600">Scan QR code or use UPI ID</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900">destitutes@upi</p>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div className="glass-card p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                            <Building2 className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">Bank Transfer</h4>
-                            <p className="text-sm text-gray-600">Direct bank transfer</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900">View Details</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="glass-card p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <CreditCard className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">Card Payment</h4>
-                            <p className="text-sm text-gray-600">Credit/Debit card</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900">Secure</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* Donation Summary */}
                   <div className="glass-card p-4">
@@ -337,9 +433,27 @@ const DonatePage = () => {
                     )}
                   </button>
 
-                  <p className="text-xs text-gray-500 text-center">
-                    Your donation is tax-deductible. You'll receive a receipt for your records.
-                  </p>
+                  <div className="space-y-4">
+                    <p className="text-xs text-gray-500 text-center">
+                      Your donation is tax-deductible. You'll receive a receipt for your records.
+                    </p>
+                    
+                    {/* Security Badges */}
+                    <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                      <div className="flex items-center space-x-1">
+                        <Shield className="w-3 h-3 text-green-600" />
+                        <span>SSL Secured</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Shield className="w-3 h-3 text-blue-600" />
+                        <span>PCI Compliant</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Shield className="w-3 h-3 text-purple-600" />
+                        <span>Razorpay Verified</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

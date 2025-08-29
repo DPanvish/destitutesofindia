@@ -20,7 +20,7 @@ import { useAuth } from '../contexts/AuthContext';
  */
 const Navbar = () => {
   // ===== HOOKS AND STATE =====
-  const { currentUser, logout } = useAuth();  // Authentication context
+  const { currentUser, userProfile, logout } = useAuth();  // Authentication context
   const [isOpen, setIsOpen] = useState(false);        // Mobile menu open state
   const [isScrolled, setIsScrolled] = useState(false); // Scroll position state
   const location = useLocation();                      // Current route location
@@ -132,7 +132,7 @@ const Navbar = () => {
                   </div>
                   <div className="flex flex-col">
                     <span className="text-white text-sm font-medium">
-                      Welcome, {currentUser.displayName || 'User'}!
+                      Welcome, {userProfile?.username || currentUser.displayName || 'User'}!
                     </span>
                     <span className="text-white/70 text-xs">
                       {currentUser.email}
@@ -223,7 +223,7 @@ const Navbar = () => {
                     </div>
                     <div className="flex flex-col">
                       <span className="text-white text-sm font-medium">
-                        Welcome, {currentUser.displayName || 'User'}!
+                        Welcome, {userProfile?.username || currentUser.displayName || 'User'}!
                       </span>
                       <span className="text-white/70 text-xs">
                         {currentUser.email}
