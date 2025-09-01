@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Camera, Upload, MapPin, User, EyeOff, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { storage, db } from '../firebase/config';
@@ -46,11 +46,48 @@ const UploadModal = ({ isOpen, onClose }) => {
   // Camera functionality
   const [showCamera, setShowCamera] = useState(false);           // Toggle camera view
   const [stream, setStream] = useState(null);                    // Camera media stream
-  
+  const [cameraError, setCameraError] = useState(null);          // Camera error state
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);   // Track if video is actually playing
+
   // ===== REFS FOR DOM ELEMENTS =====
   const fileInputRef = useRef();                                 // Hidden file input element
   const videoRef = useRef();                                     // Video element for camera preview
   const canvasRef = useRef();                                    // Canvas for capturing camera frames
+
+  // ===== EFFECTS =====
+  
+  /**
+   * Effect to connect video stream when camera is shown
+   * This ensures the video element is properly connected to the stream
+   */
+  useEffect(() => {
+    if (showCamera && stream && videoRef.current) {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          // Force video to load and play
+          videoRef.current.load();
+          videoRef.current.play().catch(error => {
+            console.error('Error playing video:', error);
+            setCameraError('Failed to start video playback');
+          });
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showCamera, stream]);
+
+  /**
+   * Effect to check camera availability on component mount
+   */
+  useEffect(() => {
+    // Check if camera is available
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setCameraError('Camera not supported in this browser');
+    }
+  }, []);
 
   /**
    * Captures the user's current GPS location using the browser's geolocation API
@@ -97,21 +134,27 @@ const UploadModal = ({ isOpen, onClose }) => {
    */
   const startCamera = async () => {
     try {
+      // Clear any previous errors and reset states
+      setCameraError(null);
+      setIsVideoPlaying(false);
+      
       // Request camera access with rear camera preference
       const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' }  // Use rear camera if available
+        video: { 
+          facingMode: 'environment',  // Use rear camera if available
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
       });
       
       // Store the stream and show camera interface
       setStream(mediaStream);
       setShowCamera(true);
       
-      // Connect stream to video element for live preview
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
+      // Note: Video connection is handled by useEffect
     } catch (error) {
       console.error('Error accessing camera:', error);
+      setCameraError('Unable to access camera. Please check permissions and try again.');
       toast.error('Unable to access camera. Please select a file instead.');
     }
   };
@@ -158,6 +201,8 @@ const UploadModal = ({ isOpen, onClose }) => {
       setStream(null);
     }
     setShowCamera(false);
+    setIsVideoPlaying(false);
+    setCameraError(null);
   };
 
   /**
@@ -314,6 +359,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                 >
                   <Camera className="w-8 h-8 text-primary-600 mb-2 group-hover:scale-110 transition-transform duration-300" />
                   <span className="text-sm font-medium text-primary-600">Take Photo</span>
+                  <span className="text-xs text-gray-500 mt-1">Camera access required</span>
                 </button>
 
                 <button
@@ -322,7 +368,14 @@ const UploadModal = ({ isOpen, onClose }) => {
                 >
                   <Upload className="w-8 h-8 text-gray-600 mb-2 group-hover:scale-110 transition-transform duration-300" />
                   <span className="text-sm font-medium text-gray-600">Upload Photo</span>
+                  <span className="text-xs text-gray-500 mt-1">From your gallery</span>
                 </button>
+              </div>
+
+              {/* Camera availability info */}
+              <div className="text-center text-sm text-gray-600">
+                <p>Camera access requires HTTPS and user permission</p>
+                <p>If camera doesn't work, use the upload option above</p>
               </div>
 
               {/* Hidden file input for gallery selection */}
@@ -343,8 +396,48 @@ const UploadModal = ({ isOpen, onClose }) => {
                   ref={videoRef}
                   autoPlay
                   playsInline
-                  className="w-full aspect-video bg-black rounded-xl"
+                  muted
+                  className="w-full aspect-video bg-gray-900 rounded-xl"
+                  onLoadedMetadata={() => console.log('Video metadata loaded')}
+                  onCanPlay={() => {
+                    console.log('Video can play');
+                    setIsVideoPlaying(true);
+                  }}
+                  onPlaying={() => setIsVideoPlaying(true)}
+                  onPause={() => setIsVideoPlaying(false)}
+                  onError={(e) => {
+                    console.error('Video error:', e);
+                    setCameraError('Video playback error');
+                    setIsVideoPlaying(false);
+                  }}
                 />
+                
+                {/* Camera loading indicator */}
+                {!cameraError && stream && !isVideoPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 rounded-xl">
+                    <div className="text-white text-center">
+                      <div className="loading-spinner mx-auto mb-2"></div>
+                      <p className="text-sm">Starting camera...</p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Camera error display */}
+                {cameraError && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 rounded-xl">
+                    <div className="text-white text-center p-4">
+                      <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-400" />
+                      <p className="text-sm font-medium">{cameraError}</p>
+                      <button
+                        onClick={startCamera}
+                        className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors"
+                      >
+                        Retry Camera
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
                 {/* Hidden canvas for capturing video frames */}
                 <canvas ref={canvasRef} className="hidden" />
                 
@@ -352,7 +445,8 @@ const UploadModal = ({ isOpen, onClose }) => {
                 <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
                   <button
                     onClick={capturePhoto}
-                    className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300"
+                    disabled={!!cameraError || !stream}
+                    className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div className="w-12 h-12 bg-primary-600 rounded-full"></div>
                   </button>

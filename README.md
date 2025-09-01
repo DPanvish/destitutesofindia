@@ -1,272 +1,234 @@
-# Destitutes of India - Making the Invisible Visible
+# Destitutes of India
 
-A platform to raise awareness about destitute individuals in India through geotagged photos. This web application allows users to share photos with location data to help connect compassion with need and foster community awareness.
+A platform to raise awareness about destitute individuals in India through geotagged photos. Users can upload photos with location data to help identify areas that need attention and support.
 
-## 🌟 Features
+## Features
 
-- **Instant Photo Upload**: Capture or select photos with one-click camera functionality
-- **Geolocation Integration**: Automatic GPS tagging with user permission
-- **Real-time Feed**: Dynamic, reverse-chronological display of shared photos
-- **Google Authentication**: Secure login using Google Sign-In
-- **Anonymous Posting**: Option to post without revealing identity
-- **Responsive Design**: Mobile-first, modern UI built with Tailwind CSS
-- **Responsibility Warnings**: Built-in cautionary measures before posting
-- **Location Mapping**: Clickable links to Google Maps for each post
+- 📸 **Photo Upload**: Upload photos with geolocation data
+- 🗺️ **Location Tracking**: Automatic GPS capture and mapping
+- 🔐 **User Authentication**: Secure login with Firebase Auth
+- 💳 **Donation System**: Integrated Razorpay payment gateway
+- 📧 **Contact Form**: Web3Forms integration for inquiries
+- 📱 **Responsive Design**: Works on all devices
+- 🔒 **Privacy Controls**: Anonymous posting options
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend**: React 18 with Create React App
-- **Styling**: Tailwind CSS with custom design system
-- **Authentication**: Firebase Authentication (Google Provider)
-- **Database**: Firestore (NoSQL)
-- **Storage**: Firebase Cloud Storage
-- **Deployment**: Hostinger (Frontend) + Google Cloud (Backend)
-- **CI/CD**: GitHub Actions with automated deployment
+- **Frontend**: React.js, Tailwind CSS
+- **Authentication**: Firebase Auth
+- **Database**: Firebase Firestore
+- **Storage**: Firebase Storage
+- **Payments**: Razorpay
+- **Forms**: Web3Forms
+- **Deployment**: Netlify
 
-## 📋 Prerequisites
+## Getting Started
 
-Before running this project, make sure you have:
+### Prerequisites
 
-- Node.js 18+ installed
-- npm or yarn package manager
-- Google account for Firebase setup
-- Hostinger hosting account (for deployment)
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase project
+- Razorpay account
+- Web3Forms account
 
-## 🚀 Quick Start
+### Installation
 
-### 1. Clone the Repository
-
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/destitutesofindia.git
-cd destitutesofindia
+git clone <repository-url>
+cd destitutes-of-india
 ```
 
-### 2. Install Dependencies
-
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-### 3. Firebase Setup
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project
-3. Enable the following services:
-   - **Authentication**: Enable Google Sign-In
-   - **Firestore Database**: Create database in production mode
-   - **Storage**: Create storage bucket
-
-4. Get your Firebase configuration:
-   - Go to Project Settings > General
-   - Scroll down to "Your apps" section
-   - Click "Add app" > Web app
-   - Copy the configuration object
-
-5. Update the Firebase configuration:
-   - Open `src/firebase/config.js`
-   - Replace the placeholder config with your actual Firebase config
-
-### 4. Environment Variables
-
+3. Set up environment variables:
 Create a `.env` file in the root directory:
-
 ```env
-REACT_APP_FIREBASE_API_KEY=your-api-key
-REACT_APP_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-REACT_APP_FIREBASE_PROJECT_ID=your-project-id
-REACT_APP_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
-REACT_APP_FIREBASE_APP_ID=your-app-id
+REACT_APP_RAZORPAY_KEY_ID=your_razorpay_key_id
+REACT_APP_RAZORPAY_KEY_SECRET=your_razorpay_secret_key
 ```
 
-### 5. Start Development Server
-
+4. Start the development server:
 ```bash
 npm start
 ```
 
-The application will be available at `http://localhost:3000`
+## Deployment to Netlify
 
-## 🔧 Configuration
+### Method 1: Deploy via Netlify UI
 
-### Firebase Security Rules
+1. **Push to GitHub**: Ensure your code is pushed to a GitHub repository
 
-#### Firestore Rules
+2. **Connect to Netlify**:
+   - Go to [netlify.com](https://netlify.com)
+   - Click "New site from Git"
+   - Choose your GitHub repository
+   - Set build settings:
+     - Build command: `npm run build`
+     - Publish directory: `build`
+   - Click "Deploy site"
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow authenticated users to read posts
-    match /posts/{postId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && 
-        request.auth.uid == resource.data.userId;
-    }
-    
-    // Allow users to read their own user data
-    match /users/{userId} {
-      allow read, write: if request.auth != null && 
-        request.auth.uid == userId;
-    }
-  }
-}
+3. **Environment Variables**:
+   - Go to Site settings > Environment variables
+   - Add your environment variables:
+     - `REACT_APP_FIREBASE_API_KEY`
+     - `REACT_APP_FIREBASE_AUTH_DOMAIN`
+     - `REACT_APP_FIREBASE_PROJECT_ID`
+     - `REACT_APP_FIREBASE_STORAGE_BUCKET`
+     - `REACT_APP_FIREBASE_MESSAGING_SENDER_ID`
+     - `REACT_APP_FIREBASE_APP_ID`
+     - `REACT_APP_FIREBASE_MEASUREMENT_ID`
+     - `REACT_APP_RAZORPAY_KEY_ID`
+     - `REACT_APP_RAZORPAY_KEY_SECRET`
+     - `REACT_APP_WEB3FORMS_ACCESS_KEY`
+
+### Method 2: Deploy via Netlify CLI
+
+1. **Install Netlify CLI**:
+```bash
+npm install -g netlify-cli
 ```
 
-#### Storage Rules
-
-```javascript
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    // Allow authenticated users to upload images
-    match /images/{userId}/{allPaths=**} {
-      allow read: if true;
-      allow write: if request.auth != null && 
-        request.auth.uid == userId &&
-        request.resource.size < 10 * 1024 * 1024 && // 10MB limit
-        request.resource.contentType.matches('image/.*');
-    }
-  }
-}
+2. **Build the project**:
+```bash
+npm run build
 ```
 
-### Tailwind CSS Configuration
-
-The project uses a custom Tailwind configuration with:
-- Primary color scheme (blue tones)
-- Secondary color scheme (gray tones)
-- Accent color scheme (red tones)
-- Custom animations and components
-- Responsive design utilities
-
-## 📱 Usage
-
-### For Users
-
-1. **Sign In**: Click "Sign In" and authenticate with your Google account
-2. **Take Photo**: Use the camera button to capture or select a photo
-3. **Grant Location Permission**: Allow location access when prompted
-4. **Add Details**: Optionally add a description and choose to post anonymously
-5. **Confirm**: Review the responsibility warning and confirm your post
-6. **View Feed**: Browse the real-time feed of all shared photos
-
-### For Administrators
-
-- Monitor user activity through Firebase Console
-- Review and moderate content as needed
-- Manage user accounts and permissions
-- Access analytics and usage data
-
-## 🚀 Deployment
-
-### Automated Deployment (Recommended)
-
-1. **Set up GitHub Secrets**:
-   - Go to your GitHub repository > Settings > Secrets and variables > Actions
-   - Add the following secrets:
-     - `FTP_SERVER`: Your Hostinger FTP server address
-     - `FTP_USERNAME`: Your Hostinger FTP username
-     - `FTP_PASSWORD`: Your Hostinger FTP password
-
-2. **Push to Main Branch**:
-   ```bash
-   git add .
-   git commit -m "Initial deployment"
-   git push origin main
-   ```
-
-3. **Monitor Deployment**:
-   - Go to Actions tab in your GitHub repository
-   - Check the deployment status
-
-### Manual Deployment
-
-1. **Build the Application**:
-   ```bash
-   npm run build
-   ```
-
-2. **Upload to Hostinger**:
-   - Connect to your Hostinger hosting via FTP
-   - Upload the contents of the `build` folder to `public_html`
-
-## 📁 Project Structure
-
-```
-destitutesofindia/
-├── public/                 # Static files
-│   ├── index.html         # Main HTML file
-│   └── manifest.json      # PWA manifest
-├── src/                   # Source code
-│   ├── components/        # React components
-│   │   ├── Navbar.js      # Navigation component
-│   │   ├── Footer.js      # Footer component
-│   │   ├── ImageFeed.js   # Photo feed component
-│   │   ├── ImageCard.js   # Individual photo card
-│   │   ├── UploadModal.js # Photo upload modal
-│   │   └── LoginPrompt.js # Login prompt component
-│   ├── contexts/          # React contexts
-│   │   └── AuthContext.js # Authentication context
-│   ├── pages/             # Page components
-│   │   ├── HomePage.js    # Home page
-│   │   ├── AboutPage.js   # About page
-│   │   ├── ContactPage.js # Contact page
-│   │   ├── DonatePage.js  # Donation page
-│   │   └── [Legal Pages]  # Privacy, Terms, Disclaimer
-│   ├── firebase/          # Firebase configuration
-│   │   └── config.js      # Firebase setup
-│   ├── App.js             # Main app component
-│   ├── index.js           # App entry point
-│   └── index.css          # Global styles
-├── .github/               # GitHub Actions
-│   └── workflows/         # Deployment workflows
-├── package.json           # Dependencies and scripts
-├── tailwind.config.js     # Tailwind configuration
-└── README.md             # Project documentation
+3. **Deploy**:
+```bash
+netlify deploy --prod --dir=build
 ```
 
-## 🔒 Security Considerations
+### Method 3: Drag and Drop
 
-- **Authentication**: Google OAuth for secure user authentication
-- **Data Protection**: All data encrypted in transit and at rest
-- **Privacy**: User consent required for location access
-- **Content Moderation**: Built-in responsibility warnings
-- **Rate Limiting**: Implemented to prevent abuse
-- **Secure Headers**: HTTPS enforcement and security headers
+1. **Build the project**:
+```bash
+npm run build
+```
 
-## 🤝 Contributing
+2. **Drag the `build` folder** to [netlify.com](https://netlify.com)
+
+## Configuration Files
+
+### `netlify.toml`
+- Build settings and redirects
+- Security headers
+- Cache optimization
+
+### `public/_redirects`
+- Handles React Router client-side routing
+- Ensures all routes work properly
+
+## Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `REACT_APP_FIREBASE_API_KEY` | Firebase API key | Yes |
+| `REACT_APP_FIREBASE_AUTH_DOMAIN` | Firebase auth domain | Yes |
+| `REACT_APP_FIREBASE_PROJECT_ID` | Firebase project ID | Yes |
+| `REACT_APP_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket | Yes |
+| `REACT_APP_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender ID | Yes |
+| `REACT_APP_FIREBASE_APP_ID` | Firebase app ID | Yes |
+| `REACT_APP_FIREBASE_MEASUREMENT_ID` | Firebase analytics ID | No |
+| `REACT_APP_RAZORPAY_KEY_ID` | Razorpay public key | Yes |
+| `REACT_APP_RAZORPAY_KEY_SECRET` | Razorpay secret key | No (backend only) |
+| `REACT_APP_WEB3FORMS_ACCESS_KEY` | Web3Forms access key | Yes |
+
+## Firebase Setup
+
+1. **Create a Firebase project**:
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Create a new project or use existing one
+
+2. **Enable Authentication**:
+   - Go to Authentication > Sign-in method
+   - Enable Google provider
+   - Enable Email/Password provider
+
+3. **Create Firestore Database**:
+   - Go to Firestore Database
+   - Create database in production mode
+   - Set up security rules
+
+4. **Enable Storage**:
+   - Go to Storage
+   - Create storage bucket
+   - Set up security rules
+
+5. **Add Authorized Domains** (IMPORTANT for Netlify):
+   - Go to Authentication > Settings > Authorized domains
+   - Add your Netlify domain: `your-app-name.netlify.app`
+   - Add `localhost` for local development
+
+6. **Update Firebase Config**:
+   - Copy config from Project Settings > General
+   - Update `src/firebase/config.js` or use environment variables
+
+## Razorpay Setup
+
+1. Create a Razorpay account
+2. Get your test/live keys
+3. Update the key in the DonatePage component
+4. Set up webhook endpoints (for production)
+
+## Web3Forms Setup
+
+1. Get your access key from [web3forms.com](https://web3forms.com)
+2. Update the access key in ContactPage component
+
+## Build and Test
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+
+# Build for production
+npm run build
+
+# Test build locally
+npx serve -s build
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Build fails**: Check Node.js version (should be 18+)
+2. **Routing issues**: Ensure `_redirects` file is in `public/` folder
+3. **Environment variables**: Make sure they're set in Netlify dashboard
+4. **Firebase errors**: Verify Firebase config and rules
+5. **Google Auth not working**: 
+   - Add your Netlify domain to Firebase Auth authorized domains
+   - Go to Firebase Console > Authentication > Settings > Authorized domains
+   - Add: `your-app-name.netlify.app` and `localhost`
+6. **CORS errors**: Check Firebase Storage and Firestore security rules
+
+### Performance Optimization
+
+- Images are optimized automatically
+- Static assets are cached
+- Code splitting is enabled
+- Lazy loading for components
+
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
-## 🙏 Acknowledgments
+## Support
 
-- Firebase for backend services
-- Tailwind CSS for styling framework
-- React community for the amazing ecosystem
-- All contributors and supporters of this project
-
-## 📞 Support
-
-For support and questions:
-
-- **Email**: contact@destitutesofindia.com
-- **Documentation**: [Project Wiki](link-to-wiki)
-- **Issues**: [GitHub Issues](link-to-issues)
-
-## 🌟 Mission
-
-Our mission is to make the invisible visible by connecting compassionate citizens with those in need through technology. Every photo shared, every location mapped, and every story told brings us closer to a more compassionate and inclusive India.
-
----
-
-**Built with ❤️ for a better India**
+For support, email contact@destitutesofindia.com or use the contact form on the website.
