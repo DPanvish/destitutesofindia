@@ -110,7 +110,7 @@ const DonatePage = () => {
       
       // Configure Razorpay options without order_id for testing
       const options = {
-        key: 'rzp_test_RBCRdbbNcgKd2Q', // Your Razorpay test key
+        key: process.env.REACT_APP_RAZORPAY_TEST_KEY, // Your Razorpay test key
         amount: amount * 100, // Convert to paise
         currency: 'INR',
         name: 'Destitutes of India',
@@ -241,19 +241,19 @@ const DonatePage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero section with donation call-to-action */}
-      <section className="hero-gradient relative overflow-hidden py-20">
+      <section className="relative py-20 overflow-hidden hero-gradient">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-pattern opacity-20"></div>
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full opacity-10 animate-float"></div>
-        <div className="absolute top-20 right-20 w-16 h-16 bg-white rounded-full opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-10 left-1/4 w-12 h-12 bg-white rounded-full opacity-10 animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute w-20 h-20 bg-white rounded-full top-10 left-10 opacity-10 animate-float"></div>
+        <div className="absolute w-16 h-16 bg-white rounded-full top-20 right-20 opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute w-12 h-12 bg-white rounded-full bottom-10 left-1/4 opacity-10 animate-float" style={{ animationDelay: '2s' }}></div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="mb-6 text-4xl font-bold text-white md:text-6xl">
               Support Our <span className="text-gradient">Mission</span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            <p className="max-w-3xl mx-auto text-xl md:text-2xl text-white/90">
               Your donation helps us maintain the platform and expand our reach to help more people in need.
             </p>
           </div>
@@ -262,22 +262,22 @@ const DonatePage = () => {
 
       {/* Main content section with donation options and information */}
       <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Information about how donations help the platform */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="mb-8 text-3xl font-bold text-gray-900">
                 How Your Donation Helps
               </h2>
               
               <div className="space-y-6">
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl group-hover:scale-110">
                       <Heart className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
                         Platform Maintenance
                       </h3>
                       <p className="text-gray-600">
@@ -290,11 +290,11 @@ const DonatePage = () => {
 
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl group-hover:scale-110">
                       <QrCode className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
                         Technology Development
                       </h3>
                       <p className="text-gray-600">
@@ -307,11 +307,11 @@ const DonatePage = () => {
 
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl group-hover:scale-110">
                       <Building2 className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
                         NGO Partnerships
                       </h3>
                       <p className="text-gray-600">
@@ -324,11 +324,11 @@ const DonatePage = () => {
 
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl group-hover:scale-110">
                       <ArrowRight className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      <h3 className="mb-2 text-lg font-semibold text-gray-900">
                         Community Outreach
                       </h3>
                       <p className="text-gray-600">
@@ -343,19 +343,19 @@ const DonatePage = () => {
 
             {/* Donation Form */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="mb-8 text-3xl font-bold text-gray-900">
                 Make a Donation
               </h2>
               
               {isSuccess ? (
-                <div className="card text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-center card">
+                  <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="mb-2 text-xl font-semibold text-gray-900">
                     Thank You for Your Donation!
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="mb-4 text-gray-600">
                     Your contribution of ₹{finalAmount.toLocaleString()} will help us continue our mission. 
                     You'll receive a confirmation email shortly.
                   </p>
@@ -367,13 +367,13 @@ const DonatePage = () => {
                   </button>
                 </div>
               ) : (
-                <div className="card space-y-6">
+                <div className="space-y-6 card">
                   {/* Amount Selection */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    <h3 className="mb-4 text-lg font-semibold text-gray-900">
                       Select Amount
                     </h3>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                    <div className="grid grid-cols-2 gap-3 mb-4 md:grid-cols-3">
                       {predefinedAmounts.map((amount) => (
                         <button
                           key={amount}
@@ -401,7 +401,7 @@ const DonatePage = () => {
                         min="1"
                         max="100000"
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="mt-1 text-xs text-gray-500">
                         Maximum donation amount: ₹1,00,000
                       </p>
                     </div>
@@ -410,27 +410,27 @@ const DonatePage = () => {
 
 
                   {/* Donation Summary */}
-                  <div className="glass-card p-4">
-                    <div className="flex justify-between items-center mb-2">
+                  <div className="p-4 glass-card">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-gray-600">Donation Amount:</span>
                       <span className="font-semibold text-gray-900">₹{finalAmount.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-gray-600">Processing Fee:</span>
                       <span className="font-semibold text-gray-900">₹0</span>
                     </div>
-                    <div className="border-t pt-2 flex justify-between items-center">
+                    <div className="flex items-center justify-between pt-2 border-t">
                       <span className="font-semibold text-gray-900">Total:</span>
                       <span className="text-xl font-bold text-primary-600">₹{finalAmount.toLocaleString()}</span>
                     </div>
                     
                     {/* Test Mode Indicator */}
-                    <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="p-2 mt-3 border border-yellow-200 rounded-lg bg-yellow-50">
                       <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                        <span className="text-xs text-yellow-700 font-medium">Test Mode</span>
+                        <span className="text-xs font-medium text-yellow-700">Test Mode</span>
                       </div>
-                      <p className="text-xs text-yellow-600 mt-1">
+                      <p className="mt-1 text-xs text-yellow-600">
                         This is a test payment. No real money will be charged.
                       </p>
                     </div>
@@ -439,7 +439,7 @@ const DonatePage = () => {
                   <button
                     onClick={handleDonate}
                     disabled={isProcessing || finalAmount <= 0}
-                    className="btn-primary w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-full space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isProcessing ? (
                       <>
@@ -455,7 +455,7 @@ const DonatePage = () => {
                   </button>
 
                   <div className="space-y-4">
-                    <p className="text-xs text-gray-500 text-center">
+                    <p className="text-xs text-center text-gray-500">
                       Your donation is tax-deductible. You'll receive a receipt for your records.
                     </p>
                     

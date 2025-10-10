@@ -89,7 +89,7 @@ const ImageFeed = () => {
   // Loading state - show spinner while fetching data
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
+      <div className="flex items-center justify-center py-12">
         <div className="flex items-center space-x-2">
           <Loader2 className="w-6 h-6 animate-spin text-primary-600" />
           <span className="text-gray-600">Loading photos...</span>
@@ -101,17 +101,17 @@ const ImageFeed = () => {
   // Error state - show error message with retry button
   if (error) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <div className="max-w-md mx-auto">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full">
             <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-medium text-gray-900">
             Unable to load photos
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             {error}
           </p>
           <button
@@ -132,25 +132,25 @@ const ImageFeed = () => {
   // Empty state - show when no photos are available
   if (photos.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <div className="max-w-md mx-auto">
           {/* Empty state icon */}
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full">
             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="mb-2 text-lg font-medium text-gray-900">
             No photos uploaded yet
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             This is where photos shared by our community will appear. Be the first to upload a photo and help raise awareness about destitute individuals in your area. Your contribution can make a real difference.
           </p>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
             <p className="text-sm text-blue-800">
               <strong>How to get started:</strong>
             </p>
-            <ul className="text-sm text-blue-700 mt-2 space-y-1 text-left">
+            <ul className="mt-2 space-y-1 text-sm text-left text-blue-700">
               <li>• Click the camera button to upload a photo</li>
               <li>• Add location details and description</li>
               <li>• Help raise awareness in your community</li>
@@ -171,7 +171,7 @@ const ImageFeed = () => {
         Recent Photos
       </h2>
       {/* Responsive grid layout for photos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {photos.map((photo) => (
           <ImageCard key={photo.id} post={photo} />
         ))}

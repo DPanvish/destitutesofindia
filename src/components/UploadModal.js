@@ -329,11 +329,11 @@ const UploadModal = ({ isOpen, onClose }) => {
       {/* Modal container with scroll support and flex layout */}
       <div className="modal-content max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
         {/* Fixed header with title and close button */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white rounded-t-2xl flex-shrink-0">
+        <div className="flex items-center justify-between flex-shrink-0 p-6 bg-white border-b border-gray-200 rounded-t-2xl">
           <h2 className="text-2xl font-bold text-gray-900">Share a Photo</h2>
           <button
             onClick={handleClose}
-            className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors duration-200"
+            className="flex items-center justify-center w-8 h-8 transition-colors duration-200 bg-gray-100 rounded-full hover:bg-gray-200"
           >
             <X className="w-5 h-5 text-gray-600" />
           </button>
@@ -347,33 +347,33 @@ const UploadModal = ({ isOpen, onClose }) => {
             <div className="space-y-4">
               {/* Section header with instructions */}
               <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Capture or Upload Photo</h3>
-                <p className="text-gray-600 text-sm">Take a new photo or select from your gallery</p>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">Capture or Upload Photo</h3>
+                <p className="text-sm text-gray-600">Take a new photo or select from your gallery</p>
               </div>
 
               {/* Camera and upload buttons in a grid layout */}
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={startCamera}
-                  className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-primary-300 rounded-xl hover:border-primary-500 hover:bg-primary-50 transition-all duration-300 group"
+                  className="flex flex-col items-center justify-center p-6 transition-all duration-300 border-2 border-dashed border-primary-300 rounded-xl hover:border-primary-500 hover:bg-primary-50 group"
                 >
-                  <Camera className="w-8 h-8 text-primary-600 mb-2 group-hover:scale-110 transition-transform duration-300" />
+                  <Camera className="w-8 h-8 mb-2 transition-transform duration-300 text-primary-600 group-hover:scale-110" />
                   <span className="text-sm font-medium text-primary-600">Take Photo</span>
-                  <span className="text-xs text-gray-500 mt-1">Camera access required</span>
+                  <span className="mt-1 text-xs text-gray-500">Camera access required</span>
                 </button>
 
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl hover:border-primary-500 hover:bg-primary-50 transition-all duration-300 group"
+                  className="flex flex-col items-center justify-center p-6 transition-all duration-300 border-2 border-gray-300 border-dashed rounded-xl hover:border-primary-500 hover:bg-primary-50 group"
                 >
-                  <Upload className="w-8 h-8 text-gray-600 mb-2 group-hover:scale-110 transition-transform duration-300" />
+                  <Upload className="w-8 h-8 mb-2 text-gray-600 transition-transform duration-300 group-hover:scale-110" />
                   <span className="text-sm font-medium text-gray-600">Upload Photo</span>
-                  <span className="text-xs text-gray-500 mt-1">From your gallery</span>
+                  <span className="mt-1 text-xs text-gray-500">From your gallery</span>
                 </button>
               </div>
 
               {/* Camera availability info */}
-              <div className="text-center text-sm text-gray-600">
+              <div className="text-sm text-center text-gray-600">
                 <p>Camera access requires HTTPS and user permission</p>
                 <p>If camera doesn't work, use the upload option above</p>
               </div>
@@ -397,7 +397,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                   autoPlay
                   playsInline
                   muted
-                  className="w-full aspect-video bg-gray-900 rounded-xl"
+                  className="w-full bg-gray-900 aspect-video rounded-xl"
                   onLoadedMetadata={() => console.log('Video metadata loaded')}
                   onCanPlay={() => {
                     console.log('Video can play');
@@ -415,8 +415,8 @@ const UploadModal = ({ isOpen, onClose }) => {
                 {/* Camera loading indicator */}
                 {!cameraError && stream && !isVideoPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 rounded-xl">
-                    <div className="text-white text-center">
-                      <div className="loading-spinner mx-auto mb-2"></div>
+                    <div className="text-center text-white">
+                      <div className="mx-auto mb-2 loading-spinner"></div>
                       <p className="text-sm">Starting camera...</p>
                     </div>
                   </div>
@@ -425,12 +425,12 @@ const UploadModal = ({ isOpen, onClose }) => {
                 {/* Camera error display */}
                 {cameraError && (
                   <div className="absolute inset-0 flex items-center justify-center bg-red-900/50 rounded-xl">
-                    <div className="text-white text-center p-4">
+                    <div className="p-4 text-center text-white">
                       <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-400" />
                       <p className="text-sm font-medium">{cameraError}</p>
                       <button
                         onClick={startCamera}
-                        className="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors"
+                        className="px-4 py-2 mt-2 text-sm text-white transition-colors bg-red-600 rounded-lg hover:bg-red-700"
                       >
                         Retry Camera
                       </button>
@@ -442,20 +442,20 @@ const UploadModal = ({ isOpen, onClose }) => {
                 <canvas ref={canvasRef} className="hidden" />
                 
                 {/* Camera controls positioned at bottom center */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                <div className="absolute flex space-x-4 transform -translate-x-1/2 bottom-4 left-1/2">
                   <button
                     onClick={capturePhoto}
                     disabled={!!cameraError || !stream}
-                    className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-16 h-16 transition-transform duration-300 bg-white rounded-full shadow-lg hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <div className="w-12 h-12 bg-primary-600 rounded-full"></div>
+                    <div className="w-12 h-12 rounded-full bg-primary-600"></div>
                   </button>
                 </div>
                 
                 {/* Close camera button in top-right corner */}
                 <button
                   onClick={stopCamera}
-                  className="absolute top-4 right-4 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors duration-300"
+                  className="absolute flex items-center justify-center w-10 h-10 text-white transition-colors duration-300 rounded-full top-4 right-4 bg-black/50 hover:bg-black/70"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -472,7 +472,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                   <img
                     src={preview}
                     alt="Preview"
-                    className="w-full aspect-video object-cover rounded-xl"
+                    className="object-cover w-full aspect-video rounded-xl"
                   />
                   {/* Remove image button */}
                   <button
@@ -480,7 +480,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                       setSelectedFile(null);
                       setPreview(null);
                     }}
-                    className="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors duration-300"
+                    className="absolute flex items-center justify-center w-8 h-8 text-white transition-colors duration-300 rounded-full top-2 right-2 bg-black/50 hover:bg-black/70"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -532,11 +532,11 @@ const UploadModal = ({ isOpen, onClose }) => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add any additional details about this location..."
-              className="input-field resize-none h-24"
+              className="h-24 resize-none input-field"
               maxLength={500}
             />
             {/* Character counter showing current/maximum length */}
-            <div className="text-xs text-gray-500 text-right">
+            <div className="text-xs text-right text-gray-500">
               {description.length}/500
             </div>
           </div>
@@ -579,7 +579,7 @@ const UploadModal = ({ isOpen, onClose }) => {
           <button
             onClick={handleSubmit}
             disabled={!selectedFile || !location || isUploading}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed mb-4"
+            className="w-full mb-4 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUploading ? (
               <div className="flex items-center justify-center space-x-2">
@@ -596,26 +596,26 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Responsibility warning modal - shown before final upload */}
         {showWarning && (
                       <div className="modal-overlay">
-              <div className="modal-content max-w-md">
+              <div className="max-w-md modal-content">
                 <div className="p-6 text-center">
                   {/* Warning icon */}
-                  <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-yellow-100 rounded-full">
                     <AlertTriangle className="w-8 h-8 text-yellow-600" />
                   </div>
                   
                   {/* Warning title */}
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">
                     Post with Responsibility
                   </h3>
                   
                   {/* Warning message about platform purpose */}
-                  <p className="text-gray-600 mb-6">
+                  <p className="mb-6 text-gray-600">
                     By sharing this photo, you acknowledge that this platform is for awareness purposes only. 
                     Please ensure you have the individual's consent when possible and respect their dignity.
                   </p>
                 
                  {/* Guidelines for responsible posting */}
-                 <div className="space-y-3 text-sm text-gray-600 text-left glass-card p-4 rounded-lg">
+                 <div className="p-4 space-y-3 text-sm text-left text-gray-600 rounded-lg glass-card">
                   <p>• This platform is for raising awareness, not direct aid</p>
                   <p>• Respect the dignity and privacy of individuals</p>
                   <p>• Do not share photos that could cause harm or distress</p>
@@ -623,7 +623,7 @@ const UploadModal = ({ isOpen, onClose }) => {
                 </div>
                 
                 {/* Action buttons for the warning modal */}
-                <div className="flex space-x-4 mt-6">
+                <div className="flex mt-6 space-x-4">
                   <button
                     onClick={() => setShowWarning(false)}
                     className="flex-1 btn-secondary"

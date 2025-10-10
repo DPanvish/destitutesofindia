@@ -191,16 +191,16 @@ const UserProfileCompletion = () => {
   // ===== RENDER =====
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="flex items-center justify-center min-h-screen px-4 py-12 bg-gradient-to-br from-primary-50 to-secondary-50 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary-100">
               <User className="w-8 h-8 text-primary-600" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">
             Complete Your Profile
           </h2>
           <p className="text-gray-600">
@@ -212,11 +212,11 @@ const UserProfileCompletion = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username Field */}
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="username" className="block mb-1 text-sm font-medium text-gray-700">
               Username
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <User className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <input
                 id="username"
                 name="username"
@@ -224,23 +224,23 @@ const UserProfileCompletion = () => {
                 required
                 value={formData.username}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full py-3 pl-10 pr-3 transition-colors border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="Choose a username"
                 maxLength={20}
               />
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-500">
               This will be your display name on the platform
             </p>
           </div>
 
           {/* Phone Number Field */}
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="phoneNumber" className="block mb-1 text-sm font-medium text-gray-700">
               Phone Number
             </label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Phone className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <input
                 id="phoneNumber"
                 name="phoneNumber"
@@ -248,12 +248,12 @@ const UserProfileCompletion = () => {
                 required
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full py-3 pl-10 pr-3 transition-colors border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="10-digit phone number"
                 maxLength={10}
               />
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-500">
               We'll use this for important updates and verification
             </p>
           </div>
@@ -262,7 +262,7 @@ const UserProfileCompletion = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full btn-primary inline-flex items-center justify-center space-x-2 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center w-full py-3 space-x-2 text-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>{isLoading ? 'Saving...' : 'Complete Profile'}</span>
             {!isLoading && <ArrowRight className="w-5 h-5" />}
@@ -273,18 +273,18 @@ const UserProfileCompletion = () => {
         <div className="text-center">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-500 hover:text-gray-700 text-sm"
+            className="text-sm text-gray-500 hover:text-gray-700"
           >
             Skip for now
           </button>
         </div>
 
         {/* Info */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="p-4 border border-blue-200 rounded-lg bg-blue-50">
           <p className="text-sm text-blue-800">
             <strong>Why we need this information:</strong>
           </p>
-          <ul className="text-sm text-blue-700 mt-2 space-y-1">
+          <ul className="mt-2 space-y-1 text-sm text-blue-700">
             <li>• Username helps personalize your experience</li>
             <li>• Phone number enables important updates and verification</li>
             <li>• Your data is secure and will never be shared</li>

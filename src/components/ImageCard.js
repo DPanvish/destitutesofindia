@@ -100,16 +100,16 @@ const ImageCard = ({ post }) => {
       <div className="relative overflow-hidden rounded-t-2xl">
         {/* Loading skeleton - shown while image is loading */}
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse">
             <div className="loading-spinner"></div>
           </div>
         )}
         
         {/* Error state - shown when image fails to load */}
         {imageError ? (
-          <div className="aspect-video bg-gray-200 flex items-center justify-center">
+          <div className="flex items-center justify-center bg-gray-200 aspect-video">
             <div className="text-center text-gray-500">
-              <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-2 bg-gray-300 rounded-full">
                 <MapPin className="w-8 h-8 text-gray-400" />
               </div>
               <p className="text-sm">Image unavailable</p>
@@ -128,10 +128,10 @@ const ImageCard = ({ post }) => {
         )}
 
         {/* Overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/50 via-transparent to-transparent group-hover:opacity-100"></div>
 
         {/* Action buttons overlay */}
-        <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+        <div className="absolute flex space-x-2 transition-all duration-300 transform translate-y-2 opacity-0 top-4 right-4 group-hover:opacity-100 group-hover:translate-y-0">
           <button
             onClick={handleLike}
             className={`w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all duration-300 ${
@@ -144,7 +144,7 @@ const ImageCard = ({ post }) => {
           </button>
           <button
             onClick={handleShare}
-            className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
+            className="flex items-center justify-center w-10 h-10 text-white transition-all duration-300 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30"
           >
             <Share2 className="w-5 h-5" />
           </button>
@@ -155,7 +155,7 @@ const ImageCard = ({ post }) => {
           <div className="absolute bottom-4 left-4">
             <button
               onClick={handleLocationClick}
-              className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm rounded-full px-3 py-2 text-sm font-medium text-gray-800 hover:bg-white transition-all duration-300 transform hover:scale-105"
+              className="flex items-center px-3 py-2 space-x-2 text-sm font-medium text-gray-800 transition-all duration-300 transform rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-105"
             >
               <MapPin className="w-4 h-4 text-primary-600" />
               <span>View on Map</span>
@@ -182,8 +182,8 @@ const ImageCard = ({ post }) => {
         </div>
 
         {/* Poster info */}
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+        <div className="flex items-center mb-4 space-x-3">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-primary-600">
             <User className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -198,7 +198,7 @@ const ImageCard = ({ post }) => {
 
         {/* Description */}
         {post.description && (
-          <p className="text-gray-700 text-sm leading-relaxed mb-4">
+          <p className="mb-4 text-sm leading-relaxed text-gray-700">
             {post.description}
           </p>
         )}
@@ -209,7 +209,7 @@ const ImageCard = ({ post }) => {
             {post.tags.map((tag, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full"
+                className="px-3 py-1 text-xs font-medium rounded-full bg-primary-100 text-primary-700"
               >
                 {tag}
               </span>

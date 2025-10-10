@@ -77,7 +77,7 @@ const WelcomeBanner = ({
 
   return (
     <section className={`bg-gradient-to-r from-primary-600 to-primary-700 ${config.container}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="text-center">
           <div className={`flex items-center justify-center space-x-3 ${config.spacing}`}>
             <div className={`${config.iconSize} bg-white/20 rounded-full flex items-center justify-center`}>
@@ -94,7 +94,7 @@ const WelcomeBanner = ({
             <div className="mt-4">
               <button
                 onClick={onCTAClick}
-                className="inline-flex items-center space-x-2 bg-white text-primary-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300"
+                className="inline-flex items-center px-6 py-3 space-x-2 font-semibold transition-colors duration-300 bg-white rounded-full text-primary-600 hover:bg-gray-100"
               >
                 {React.createElement(ctaIcon, { className: 'w-5 h-5' })}
                 <span>{ctaText}</span>

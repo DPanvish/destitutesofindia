@@ -144,17 +144,17 @@ const AuthPage = () => {
   // ===== RENDER =====
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center min-h-screen px-4 py-12 bg-gradient-to-br from-primary-50 to-secondary-50 sm:px-6 lg:px-8">
       {/* Authentication form container */}
-      <div className="max-w-md w-full space-y-8">
+      <div className="w-full max-w-md space-y-8">
         {/* Page header with logo and title */}
         <div className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-primary-100">
               <Camera className="w-8 h-8 text-primary-600" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <h2 className="mb-2 text-3xl font-bold text-gray-900">
             {isSignUp ? 'Create Account' : 'Welcome Back'}
           </h2>
           <p className="text-gray-600">
@@ -170,7 +170,7 @@ const AuthPage = () => {
           <button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full btn-primary inline-flex items-center justify-center space-x-2 px-6 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center w-full px-6 py-3 space-x-2 text-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -200,7 +200,7 @@ const AuthPage = () => {
             <div className="w-full border-t border-gray-300" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gradient-to-br from-primary-50 to-secondary-50 text-gray-500">
+            <span className="px-2 text-gray-500 bg-gradient-to-br from-primary-50 to-secondary-50">
               Or continue with email
             </span>
           </div>
@@ -209,11 +209,11 @@ const AuthPage = () => {
         {/* Email/Password Form */}
         <form onSubmit={handleEmailAuth} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-700">
               Email address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <input
                 id="email"
                 name="email"
@@ -221,7 +221,7 @@ const AuthPage = () => {
                 required
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full py-3 pl-10 pr-3 transition-colors border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="Enter your email"
               />
             </div>
@@ -230,11 +230,11 @@ const AuthPage = () => {
 
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-700">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
               <input
                 id="password"
                 name="password"
@@ -242,13 +242,13 @@ const AuthPage = () => {
                 required
                 value={formData.password}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                className="w-full py-3 pl-10 pr-10 transition-colors border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 placeholder="Enter your password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -257,11 +257,11 @@ const AuthPage = () => {
 
           {isSignUp && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="confirmPassword" className="block mb-1 text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -269,7 +269,7 @@ const AuthPage = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                  className="w-full py-3 pl-10 pr-10 transition-colors border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   placeholder="Confirm your password"
                 />
               </div>
@@ -279,7 +279,7 @@ const AuthPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full btn-secondary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 text-lg btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
           </button>
@@ -291,7 +291,7 @@ const AuthPage = () => {
             {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
             <button
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-primary-600 hover:text-primary-700 font-medium"
+              className="font-medium text-primary-600 hover:text-primary-700"
             >
               {isSignUp ? 'Sign in' : 'Sign up'}
             </button>
@@ -315,7 +315,7 @@ const AuthPage = () => {
         </div>
 
         {/* Terms */}
-        <p className="text-xs text-gray-500 text-center">
+        <p className="text-xs text-center text-gray-500">
           By continuing, you agree to our{' '}
           <Link to="/terms-of-service" className="text-primary-600 hover:underline">
             Terms of Service

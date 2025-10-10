@@ -143,19 +143,19 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero section with contact call-to-action */}
-      <section className="hero-gradient relative overflow-hidden py-20">
+      <section className="relative py-20 overflow-hidden hero-gradient">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-pattern opacity-20"></div>
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full opacity-10 animate-float"></div>
-        <div className="absolute top-20 right-20 w-16 h-16 bg-white rounded-full opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute bottom-10 left-1/4 w-12 h-12 bg-white rounded-full opacity-10 animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute w-20 h-20 bg-white rounded-full top-10 left-10 opacity-10 animate-float"></div>
+        <div className="absolute w-16 h-16 bg-white rounded-full top-20 right-20 opacity-10 animate-float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute w-12 h-12 bg-white rounded-full bottom-10 left-1/4 opacity-10 animate-float" style={{ animationDelay: '2s' }}></div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="relative z-10 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="mb-6 text-4xl font-bold text-white md:text-6xl">
               Get in <span className="text-gradient">Touch</span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto">
+            <p className="max-w-3xl mx-auto text-xl md:text-2xl text-white/90">
               Have questions, suggestions, or want to collaborate? 
               We'd love to hear from you.
             </p>
@@ -165,30 +165,30 @@ const ContactPage = () => {
 
       {/* Main content section with contact form and information */}
       <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="max-w-6xl px-4 mx-auto sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Contact information and methods */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="mb-8 text-3xl font-bold text-gray-900">
                 Contact Information
               </h2>
               
               <div className="space-y-6">
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl group-hover:scale-110">
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                      <h3 className="mb-1 text-lg font-semibold text-gray-900">
                         Email
                       </h3>
-                      <p className="text-gray-600 mb-2">
+                      <p className="mb-2 text-gray-600">
                         For general inquiries and support
                       </p>
                       <a
                         href="mailto:contact@destitutesofindia.com"
-                        className="text-primary-600 hover:text-primary-700 font-medium transition-colors duration-300"
+                        className="font-medium transition-colors duration-300 text-primary-600 hover:text-primary-700"
                       >
                         contact@destitutesofindia.com
                       </a>
@@ -198,19 +198,19 @@ const ContactPage = () => {
 
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-xl group-hover:scale-110">
                       <Phone className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                      <h3 className="mb-1 text-lg font-semibold text-gray-900">
                         Phone
                       </h3>
-                      <p className="text-gray-600 mb-2">
+                      <p className="mb-2 text-gray-600">
                         For urgent matters and partnerships
                       </p>
                       <a
                         href="tel:+91-9876543210"
-                        className="text-primary-600 hover:text-primary-700 font-medium transition-colors duration-300"
+                        className="font-medium transition-colors duration-300 text-primary-600 hover:text-primary-700"
                       >
                         +91-9876543210
                       </a>
@@ -220,14 +220,14 @@ const ContactPage = () => {
 
                 <div className="card group">
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 transition-transform duration-300 bg-gradient-to-r from-accent-500 to-accent-600 rounded-xl group-hover:scale-110">
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                      <h3 className="mb-1 text-lg font-semibold text-gray-900">
                         Address
                       </h3>
-                      <p className="text-gray-600 mb-2">
+                      <p className="mb-2 text-gray-600">
                         Our main office location
                       </p>
                       <p className="text-gray-700">
@@ -243,19 +243,19 @@ const ContactPage = () => {
 
             {/* Contact Form */}
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              <h2 className="mb-8 text-3xl font-bold text-gray-900">
                 Send us a Message
               </h2>
               
               {isSubmitted ? (
-                <div className="card text-center">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="text-center card">
+                  <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
                     <CheckCircle className="w-8 h-8 text-green-600" />
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="mb-2 text-xl font-semibold text-gray-900">
                     Message Sent Successfully!
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="mb-4 text-gray-600">
                     Thank you for reaching out to us. We'll get back to you within 24 hours.
                   </p>
                   <button
@@ -318,11 +318,11 @@ const ContactPage = () => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="input-field resize-none"
+                      className="resize-none input-field"
                       placeholder="Tell us more about your inquiry..."
                       maxLength={1000}
                     />
-                    <div className="flex justify-between items-center mt-1">
+                    <div className="flex items-center justify-between mt-1">
                       <span className="text-xs text-gray-500">
                         Minimum 10 characters required
                       </span>
@@ -335,7 +335,7 @@ const ContactPage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn-primary w-full flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-full space-x-2 btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
