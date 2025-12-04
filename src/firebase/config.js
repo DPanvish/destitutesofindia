@@ -44,8 +44,12 @@ export const auth = getAuth(app);
 // Firestore database - for storing structured data
 export const db = getFirestore(app);
 
-// Firebase Storage - for storing uploaded images and files
-export const storage = getStorage(app);
+// Firebase Storage - supports custom bucket via env
+const bucketEnv = process.env.REACT_APP_FIREBASE_STORAGE_BUCKET;
+const bucketUrl = bucketEnv
+  ? (bucketEnv.startsWith('gs://') ? bucketEnv : `gs://${bucketEnv}`)
+  : undefined;
+export const storage = bucketUrl ? getStorage(app, bucketUrl) : getStorage(app);
 
 // Google Analytics - initialize only when measurementId is present and in browser
 let analytics = null;

@@ -252,6 +252,10 @@ const UploadModal = ({ isOpen, onClose }) => {
     setShowWarning(false);
 
     try {
+      if (!currentUser) {
+        toast.error('Please sign in to upload photos');
+        return;
+      }
       // Generate unique filename for the image
       const timestamp = Date.now();
       const filename = `photos/${currentUser.uid}/${timestamp}_${selectedFile.name}`;
@@ -260,7 +264,8 @@ const UploadModal = ({ isOpen, onClose }) => {
       const storageRef = ref(storage, filename);
       
       // Upload image to Firebase Storage
-      const uploadResult = await uploadBytes(storageRef, selectedFile);
+      const metadata = { contentType: selectedFile.type || 'image/jpeg' };
+      const uploadResult = await uploadBytes(storageRef, selectedFile, metadata);
       
       // Get download URL for the uploaded image
       const downloadURL = await getDownloadURL(uploadResult.ref);
@@ -305,7 +310,8 @@ const UploadModal = ({ isOpen, onClose }) => {
       
     } catch (error) {
       console.error('Error uploading photo:', error);
-      toast.error('Failed to upload photo. Please try again.');
+      const message = error && error.code ? `Upload failed: ${error.code}` : 'Failed to upload photo. Please try again.';
+      toast.error(message);
     } finally {
       setIsUploading(false);
     }
