@@ -76,22 +76,25 @@ const DonatePage = () => {
    * Creates Razorpay order and initiates payment
    */
   const createRazorpayOrder = async (amount) => {
-    try {
-      // For testing without backend, create a mock order
-      // In production, this should call your backend API
-      const mockOrder = {
-        id: `order_${Date.now()}`,
-        amount: amount * 100, // Razorpay expects amount in paise
-        currency: 'INR',
-        receipt: `donation_${Date.now()}`,
-      };
-      
-      console.log('Created mock order:', mockOrder);
-      return mockOrder;
-    } catch (error) {
-      console.error('Error creating order:', error);
-      throw error;
+    // Try backend first if configured
+    const orderApi = process.env.REACT_APP_RAZORPAY_ORDER_API;
+    console.log('orderApi: ', orderApi);
+    if (orderApi) {
+      try {
+        const res = await fetch(orderApi, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount })
+        });
+        if (!res.ok) throw new Error('Order API failed');
+        const data = await res.json();
+        console.log('Created order from backend:', data);
+        return data;
+      } catch (err) {
+        console.warn('Order API unavailable:', err);
+      }
     }
+    return null;
   };
 
   /**
@@ -101,33 +104,48 @@ const DonatePage = () => {
     try {
       setIsProcessing(true);
       
-      // Check if Razorpay is loaded
+      // Ensure Razorpay script is loaded
       if (!window.Razorpay) {
-        toast.error('Payment gateway not loaded. Please refresh the page.');
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('Failed to load Razorpay'));
+          document.body.appendChild(script);
+        }).catch((err) => {
+          console.error(err);
+          toast.error('Payment gateway not available');
+          setIsProcessing(false);
+          return;
+        });
+      }
+
+      const key = process.env.REACT_APP_RAZORPAY_TEST_KEY;
+      console.log('key: ', key);
+      if (!key) {
+        toast.error('Razorpay key missing. Set REACT_APP_RAZORPAY_TEST_KEY');
         setIsProcessing(false);
         return;
       }
       
-      // Configure Razorpay options without order_id for testing
+      const order = await createRazorpayOrder(amount);
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_TEST_KEY, // Your Razorpay test key
-        amount: amount * 100, // Convert to paise
+        key,
+        amount: amount * 100,
         currency: 'INR',
         name: 'Destitutes of India',
         description: 'Donation for Community Support',
+        ...(order?.id && { order_id: order.id }),
         handler: function (response) {
-          // Payment successful
           console.log('Payment successful:', response);
           toast.success('Payment successful! Thank you for your donation.');
           setIsSuccess(true);
           setIsProcessing(false);
-          
-          // TODO: Send payment verification to your backend
           verifyPayment(response);
         },
         onError: function (error) {
           console.error('Razorpay error:', error);
-          toast.error('Payment failed: ' + (error.error.description || 'Unknown error'));
+          toast.error('Payment failed: ' + (error?.error?.description || 'Unknown error'));
           setIsProcessing(false);
         },
         prefill: {
@@ -154,6 +172,13 @@ const DonatePage = () => {
 
       // Initialize Razorpay
       const rzp = new window.Razorpay(options);
+
+      // Register failure event for richer errors
+      rzp.on('payment.failed', function (response) {
+        console.error('Payment failed details:', response);
+        toast.error(response?.error?.description || 'Payment failed');
+        setIsProcessing(false);
+      });
       
       // Add error handling for rzp.open()
       try {
