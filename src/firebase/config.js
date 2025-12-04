@@ -47,8 +47,16 @@ export const db = getFirestore(app);
 // Firebase Storage - for storing uploaded images and files
 export const storage = getStorage(app);
 
-// Google Analytics - for tracking user behavior and app usage
-export const analytics = getAnalytics(app);
+// Google Analytics - initialize only when measurementId is present and in browser
+let analytics = null;
+try {
+  if (typeof window !== 'undefined' && firebaseConfig.measurementId) {
+    analytics = getAnalytics(app);
+  }
+} catch (_) {
+  // noop: avoid crashing the app if analytics cannot initialize
+}
+export { analytics };
 
 // ===== AUTHENTICATION PROVIDERS =====
 
